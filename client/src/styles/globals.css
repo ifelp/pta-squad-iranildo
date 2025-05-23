@@ -76,3 +76,17 @@
     @apply bg-background text-foreground;
   }
 }
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('/fonts/SF-Pro-Display-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Source Code Pro';
+  src: url('/fonts/SourceCodePro-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
