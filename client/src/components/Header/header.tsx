@@ -4,7 +4,7 @@ import codeByCiti from '../../assets/codeByCiti.png';
 
 function Header() {
     return(
-        <div style={{backgroundColor: "white", borderBottom: "1px solid #d9d9d9"}}>
+        <header style={{backgroundColor: "white", borderBottom: "1px solid #d9d9d9", width: "100%", position: "fixed", top:0}}>
             <nav style={{display: "flex", alignItems: "center", justifyContent: "space-between", flexDirection: "row", padding: "1.5% 2%"}}>
                 <img src={logoCiti.src} alt="Logo CITI" />
                 <div style={{display: "flex", alignItems: "center", gap: "3rem", }}>
@@ -13,7 +13,7 @@ function Header() {
                 </div>
                 <img src={codeByCiti.src} alt='Made with love and code by CITi' style={{width: "13.75rem", height: "1.5rem"}} />
             </nav>
-        </div>
+        </header>
     )
 }
 
