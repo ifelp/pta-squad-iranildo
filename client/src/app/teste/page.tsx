@@ -1,4 +1,4 @@
-// pages/teste.tsx
+
 import React from 'react';
 import Card from '@/components/ui/card'; // ajuste esse caminho se necessário
 
