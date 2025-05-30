@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import ovelha from "../../assets/ovelha.png";
 import gato from "../../assets/gato.png";
@@ -8,6 +8,9 @@ import vaca from "../../assets/vaca.png";
 import cavalo from "../../assets/cavalo.png";
 import cachorro from "../../assets/cachorro.png";
 import seta from "../../assets/arrow.png";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import SendEmail from "@/components/modal_email";
 
 interface MatchFormData{
     nome: string
@@ -24,6 +27,17 @@ interface MatchFormData{
 export default function RegisterForm() {
     const { register, handleSubmit, formState: {errors}, setValue} = useForm<MatchFormData>();
     const [selectedAnimal, setSelectedAnimal] = useState<string | null>(null);
+    const router = useRouter()
+    const searchParams = useSearchParams()
+    const modal = searchParams.get('modal')
+
+    const handleClick = ()=>{
+        router.push('?modal=preview', {scroll: false})
+    }
+    const close = ()=>{
+        router.back()
+    }
+
 
     const animalOptions = [
         {name: "Ovelha", src: ovelha},
@@ -68,9 +82,11 @@ export default function RegisterForm() {
     return (
         <form onSubmit={handleSubmit(submitForm)} style={{display: "flex", flexDirection: "column", gap: "24px", padding: "1rem 0.1rem", maxWidth: "80rem", margin: "1rem auto"}}> 
             <div style={{display: "flex", gap: "13px"}}>
-                <button>
-                    <img src={seta.src}/>
+                <Link href='/Atendimento'>
+                <button type="button" style={{cursor: 'pointer'}}>
+                    <img src={seta.src} style={{pointerEvents: 'none'}}/>
                 </button>
+                </Link>
                 <h1 style={{fontSize: "48px", fontWeight: "700", gap: "32px"}}>Cadastro</h1>
             </div>
 
@@ -197,9 +213,15 @@ export default function RegisterForm() {
                 ></textarea>
             </div>
 
-            <button type="submit" style={{ display: "flex", alignSelf: "flex-end", padding: '12px 40px', backgroundColor: '#50E678', color: "#FFFFFF", borderRadius: '24px', cursor: 'pointer', marginTop: '41px', width: "205px", height: "48px"}}>
+            <button type="submit" onClick={handleClick} style={{ display: "flex", alignSelf: "flex-end", padding: '12px 40px', backgroundColor: '#50E678', color: "#FFFFFF", borderRadius: '24px', cursor: 'pointer', marginTop: '41px', width: "205px", height: "48px"}}>
                 Finalizar Cadastro
             </button>
+
+            {(modal === 'preview') && 
+                (<div className="flex justify-center items-center fixed inset-0 bg-gray-500 bg-opacity-30 backdrop-blur-sm">
+                    <SendEmail onClose={close}/>
+                </div>)
+            }
 
         </form>
     )

@@ -31,11 +31,15 @@ const inputStyle: React.CSSProperties = {
     height: "50px"
 }
 
+interface ModalEmailProps{
+    onClose: ()=> void
+}
+
 interface Email{
     email:string
 }
 
-export default function SendEmail(){
+export default function SendEmail({onClose}: ModalEmailProps){
     const {register, formState: {errors}, handleSubmit} = useForm<Email>()
 
     const sendEMail: SubmitHandler<Email> = (data)=>{
@@ -44,7 +48,7 @@ export default function SendEmail(){
     }
 return (
     <form onSubmit={handleSubmit(sendEMail)}>
-    <div style={{...positionStyle, width: "420px", height: "423px", borderRadius: "24px", padding: "48px"}}>
+    <div style={{...positionStyle,background:'white',display:'flex', justifyContent: 'center', alignItems:'center', width: "420px", height: "423px", borderRadius: "24px", padding: "48px"}}>
        
         {/* <div style={{display: "flex", justifyContent: "flex-end"}}>
             
@@ -53,7 +57,7 @@ return (
         <div style={{...positionStyle, alignItems: "center"}}>
             <div style={{display: "flex", gap: "10px"}}>
                 <img src={logoCiti.src}/>
-                <button style={{alignSelf: "flex-start"}}>
+                <button style={{alignSelf: "flex-start"}} onClick={onClose}>
                     <img src={closeIcon.src}/>
                 </button>
             </div>

@@ -6,6 +6,9 @@ import Cat from "../../../../mobile/src/assets/cat.svg";
 import Arrow from "../../assets/arrow.svg";
 import Task from "../../assets/task_alt.svg";
 import ArrowBack from "../../assets/arrow_back.svg";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import ModalConsulta from "@/components/Modal Consulta";
 
 export default function DetalhesConsulta() {
   const [consultaTipo, setConsultaTipo] = useState("Vacinação");
@@ -14,13 +17,28 @@ export default function DetalhesConsulta() {
   const [nomeDono, setNomeDono] = useState("Lucas Gomes");
   const [nomeMedico, setNomeMedico] = useState("Dr. José Carlos");
 
+  const searchParams = useSearchParams()
+  const modal = searchParams.get('modal')
+
+  const router = useRouter()
+
+  const handleClick = ()=>{
+    router.push('?modal=preview', {scroll: false})
+  }
+
+  const close = ()=>{
+    router.back()
+  }
+
   return (
     <div style={{ padding: "38px", display: "flex", flexWrap: "wrap", justifyContent: "space-between" }}>
       <div style={{ flex: "1 1 500px", maxWidth: "800px", paddingLeft: "120px", position: "relative" }}>
+        <Link href='/Atendimento'>
         <div style={{ marginBottom: "34px", display: "flex", alignItems: "center", marginLeft: "-16px" }}>
           <Image src={Arrow} alt="Seta" style={{ transform: "translateY(10%) rotate(270deg)" }} width={50}></Image>
           <span style={{ fontSize: "42px", fontWeight: "bold", marginLeft: "10px" }}>Detalhes da Consulta</span>
         </div>
+        </Link>
         <h3 style={{ fontSize: "24px", fontWeight: 800, textDecoration: "bold" }}>Paciente</h3>
         <div style={{ display: "flex", alignItems: "center", gap: "20px", margin: "16px 0" }}>
           <Image src={Cat} alt="Gato" width={295} height={299} />
@@ -45,10 +63,15 @@ export default function DetalhesConsulta() {
         </div>
         <div style={{ border: "1px solid #ccc", borderRadius: "16px", padding: "24px", marginBottom: "80px" }}>
           <p style={{ fontWeight: 600, textAlign: "center", marginBottom: "12px" }}>Deseja realizar outra consulta?</p>
-          <button style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", backgroundColor: "#30E07F", color: "white", padding: "12px", border: "none", borderRadius: "24px", fontWeight: 600, fontSize: "14px", width: "100%", cursor: "pointer" }}>
+          <button onClick={handleClick} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: "8px", backgroundColor: "#30E07F", color: "white", padding: "12px", border: "none", borderRadius: "24px", fontWeight: 600, fontSize: "14px", width: "100%", cursor: "pointer" }}>
             <Image src={Task} alt="Check" width={20} height={20} /> Agendamento
           </button>
         </div>
+        {modal === 'preview' && (
+          <div className="fixed inset-0 bg-gray-500 bg-opacity-30 backdrop-blur-sm">
+          <ModalConsulta onClose={close}/>
+          </div>
+        )}
       </div>
       <div style={{ flex: "1 400px", maxWidth: "600px", marginTop: "80px", marginRight: "200px" }}>
         <h3 style={{ fontWeight: 600, fontSize: "30px" }}>Histórico de Consultas</h3>

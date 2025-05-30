@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Card from "@/components/ui/card";
 import { CardProps } from "@/components/ui/card";
 import Filters from "@/components/Filters/filters";
+import Link from "next/link";
 
 
 const AtendimentoPage = () => {
@@ -108,15 +109,19 @@ const AtendimentoPage = () => {
       {/* Grid de Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
         {atendimentosFiltrados.map((item, index) => (
+          <Link href='/Consulta'>
           <Card key={index} {...item} />
+          </Link>
         ))}
       </div>
 
       {/* Botão Nova Consulta */}
       <div className="flex justify-end">
+        <Link href='/RegisterPage'>
         <button className="bg-green-500 w-[205px] h-[48px] text-white px-4 py-2 rounded-full text-sm hover:bg-green-600 transition">
           Nova Consulta
         </button>
+        </Link>
       </div>
     </div>
   );
