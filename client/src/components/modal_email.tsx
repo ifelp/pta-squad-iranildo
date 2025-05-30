@@ -43,6 +43,7 @@ export default function SendEmail(){
         console.log(data)
     }
 return (
+    <form onSubmit={handleSubmit(sendEMail)}>
     <div style={{...positionStyle, width: "420px", height: "423px", borderRadius: "24px", padding: "48px"}}>
        
         {/* <div style={{display: "flex", justifyContent: "flex-end"}}>
@@ -63,7 +64,6 @@ return (
         </div>
 
 
-
         <div style={{display: "flex", flexDirection: "column", gap: "12px"}}>
             <label htmlFor='emailTutor' style={{fontWeight: "bold"}}>Email</label>
             <input type='email' id='emailTutor' placeholder=' Digite aqui...' style={inputStyle} 
@@ -77,4 +77,5 @@ return (
         </div>
 
     </div>
+    </form>
 )}
