@@ -1,8 +1,10 @@
 import Image from "next/image";
+import { redirect } from "next/navigation";
 
 import { LogoCITi } from "../assets";
 
 export default function Home() {
+  redirect('/Atendimento')
   return (
     <div className="flex flex-1 flex-col h-full justify-around items-center bg-black">
       <div>
