@@ -117,7 +117,7 @@ const AtendimentoPage = () => {
 
       {/* Botão Nova Consulta */}
       <div className="flex justify-end">
-        <Link href='/RegisterPage'>
+        <Link href='/RegisterRender'>
         <button className="bg-green-500 w-[205px] h-[48px] text-white px-4 py-2 rounded-full text-sm hover:bg-green-600 transition">
           Nova Consulta
         </button>
