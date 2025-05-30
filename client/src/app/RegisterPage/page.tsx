@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import ovelha from "../../assets/ovelha.png";
 import gato from "../../assets/gato.png";
 import porco from "../../assets/porco.png";
@@ -9,8 +9,20 @@ import cavalo from "../../assets/cavalo.png";
 import cachorro from "../../assets/cachorro.png";
 import seta from "../../assets/arrow.png";
 
+interface MatchFormData{
+    nome: string
+    nomeTutor: string
+    idade: number
+    animal_type: string
+    tipoConsulta: string
+    medicoResponsavel: string
+    dataAtendimento: string
+    horarioAtendimento: string
+    descricao?: string
+}
+
 export default function RegisterForm() {
-    const { register, handleSubmit, formState: {errors}, setValue} = useForm();
+    const { register, handleSubmit, formState: {errors}, setValue} = useForm<MatchFormData>();
     const [selectedAnimal, setSelectedAnimal] = useState<string | null>(null);
 
     const animalOptions = [
@@ -22,10 +34,22 @@ export default function RegisterForm() {
         {name: "Cachorro", src: cachorro},
     ]
 
+    const options = [
+        'Primeira consulta',
+        'Retorno',
+        'Vacinação',
+        'Check-up'
+    ]
+
     const handleAnimalSelect = (animalType: string) => {
     setSelectedAnimal(animalType);
     setValue('animal_type', animalType);
 };
+
+    const submitForm: SubmitHandler<MatchFormData> = (data)=> {
+        console.log('Informação enviada')
+        console.log(data)
+    }
     const inputStyle: React.CSSProperties = {
         border: "1px solid #101010",
         padding: "0.625rem",
@@ -42,7 +66,7 @@ export default function RegisterForm() {
     }
 
     return (
-        <form style={{display: "flex", flexDirection: "column", gap: "24px", padding: "1rem 0.1rem", maxWidth: "80rem", margin: "1rem auto"}}>
+        <form onSubmit={handleSubmit(submitForm)} style={{display: "flex", flexDirection: "column", gap: "24px", padding: "1rem 0.1rem", maxWidth: "80rem", margin: "1rem auto"}}> 
             <div style={{display: "flex", gap: "13px"}}>
                 <button>
                     <img src={seta.src}/>
@@ -55,12 +79,24 @@ export default function RegisterForm() {
 
                 <div style={inputPosition}>
                     <label htmlFor="patientName" style={{fontWeight: "bold"}}>Nome do Paciente: </label>
-                    <input type="text" id="patientName" name="patient_name" placeholder="Digite aqui..." style={inputStyle}/>
+                    <input type="text" id="patientName" placeholder="Digite aqui..." style={inputStyle}
+                    {...register('nome', {required: 'Nome do pet é obrigatório.'})}/>
+                    {
+                    errors.nome && (
+                        <p className="text-red-600 text-sm">{errors.nome.message}</p>
+                    )
+                }
                 </div>
 
                 <div style={inputPosition}>
                     <label htmlFor="tutorName" style={{fontWeight: "bold"}}>Nome do Tutor: </label>
-                    <input type="text" id="tutorName" name="tutor_name" placeholder="Digite aqui..." style={inputStyle}/>
+                    <input type="text" id="tutorName" placeholder="Digite aqui..." style={inputStyle}
+                    {...register('nomeTutor', {required: 'Nome do tutor é obrigatório.'})} />
+                    {
+                    errors.nomeTutor && (
+                        <p className="text-red-600 text-sm">{errors.nomeTutor.message}</p>
+                    )
+                }
                 </div>
 
             </div>
@@ -88,14 +124,28 @@ export default function RegisterForm() {
 
                 <div style={inputPosition}>
                     <label htmlFor="patientAge" style={{fontWeight: "bold"}}>Idade do Paciente: </label>
-                    <input type="number" id="patientAge" name="patient_age" min={0} placeholder="Digite aqui..." style={inputStyle}/>
+                    <input type="number" id="patientAge" min={0} placeholder="Digite aqui..." style={inputStyle} 
+                    {...register('idade', {required: 'Idade do pet é obrigatória.'})}/>
+                    {
+                    errors.idade && (
+                        <p className="text-red-600 text-sm">{errors.idade.message}</p>
+                    )
+                }
                 </div>
 
                 <div style={inputPosition}>
                     <label htmlFor="consultationType" style={{fontWeight: "bold"}}>Tipo de Consulta: </label>
-                    <select id="consultationType" style={inputStyle}>
+                    <select id="consultationType" style={inputStyle} {...register('tipoConsulta', {required: 'Tipo da consulta é obrigatório.'})}>
                         <option value="" disabled selected>Selecione aqui...</option>
+                        {options.map((opts,index)=>(
+                            <option value={options[index]} selected>{options[index]}</option>
+                        ))}
                     </select>
+                    {
+                    errors.tipoConsulta && (
+                        <p className="text-red-600 text-sm">{errors.tipoConsulta.message}</p>
+                    )
+                }
                 </div>
             </div>
 
@@ -103,17 +153,35 @@ export default function RegisterForm() {
 
                 <div style={inputPosition}>
                     <label htmlFor="doctorName" style={{fontWeight: "bold"}}>Médico Responsável: </label>
-                    <input type="text" id="doctorName" name="doctor_name" placeholder="Digite aqui..." style={inputStyle}/>
+                    <input type="text" id="doctorName" placeholder="Digite aqui..." style={inputStyle}
+                    {...register('medicoResponsavel', {required: 'Médico responsável é obrigatório.'})}/>
+                    {
+                    errors.medicoResponsavel && (
+                        <p className="text-red-600 text-sm">{errors.medicoResponsavel.message}</p>
+                    )
+                }
                 </div>
 
                 <div style={inputPosition}>
                     <label htmlFor="serviceDate" style={{fontWeight: "bold"}}>Data do Atendimento: </label>
-                    <input type="date" id="serviceDate" name="service_date" style={inputStyle}/>
+                    <input type="date" id="serviceDate" style={inputStyle} 
+                    {...register('dataAtendimento', {required: 'Data de atendimento é obrigatória.'})}/>
+                    {
+                    errors.dataAtendimento && (
+                        <p className="text-red-600 text-sm">{errors.dataAtendimento.message}</p>
+                    )
+                }
                 </div>
 
                 <div style={inputPosition}>
                     <label htmlFor="serviceHour" style={{fontWeight: "bold"}}>Horário do Atendimento: </label>
-                    <input type="time" id="serviceHour" name="service_hour" style={inputStyle}/>
+                    <input type="time" id="serviceHour" style={inputStyle} 
+                    {...register('horarioAtendimento', {required: 'Hora do atendimento é obrigatória.'})}/>
+                    {
+                    errors.horarioAtendimento && (
+                        <p className="text-red-600 text-sm">{errors.horarioAtendimento.message}</p>
+                    )
+                }
                 </div>
 
             </div>
@@ -122,10 +190,10 @@ export default function RegisterForm() {
                 <label htmlFor="problemDescription" style={{fontWeight: "bold"}}>Descrição do Problema: </label>
                 <textarea
                     id="problemDescription"
-                    name="problem_description"
                     placeholder="Descreva o problema aqui..."
                     rows={4}
                     style={{...inputStyle, height: "unset"}}
+                    {...register('descricao')}
                 ></textarea>
             </div>
 
