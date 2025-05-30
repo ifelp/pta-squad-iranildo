@@ -1,10 +1,10 @@
 import { Suspense } from "react";
-import DetalhesConsulta from "@/components/Consultation/page";
+import RegisterForm from "@/components/RegisterPage/page";
 
-export default function Consultas(){
+export default function RegisterPage(){
     return (
     <Suspense fallback={<div>Carregando formulário…</div>}>
-      <DetalhesConsulta/>
+      <RegisterForm/>
     </Suspense>
   );
 }

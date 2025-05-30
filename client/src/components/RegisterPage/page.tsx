@@ -1,4 +1,5 @@
-'use client'
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import ovelha from "../../assets/ovelha.png";
@@ -23,6 +24,7 @@ interface MatchFormData{
     horarioAtendimento: string
     descricao?: string
 }
+
 
 export default function RegisterForm() {
     const { register, handleSubmit, formState: {errors}, setValue} = useForm<MatchFormData>();
