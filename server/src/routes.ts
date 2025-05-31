@@ -2,6 +2,7 @@ import express from "express";
 import userController from "./controllers/UserController";
 import PetController from "./controllers/PetController";
 import sendEmail from './controllers/mailController'
+import ConsultaController from "./controllers/ConsultaController";
 
 const routes = express.Router();
 
@@ -15,5 +16,10 @@ routes.get("/pet/:id", PetController.getById)
 routes.put("/pet/:id", PetController.update)
 routes.delete("/pet/:id", PetController.delete)
 routes.post('/email', sendEmail);
+routes.post("/consulta", ConsultaController.create);
+routes.get("/consulta", ConsultaController.get);
+routes.delete("/consulta/:id", ConsultaController.delete);
+routes.patch("/consulta/:id", ConsultaController.update);
+routes.get("/consulta/:id", ConsultaController.getById);
 
 export default routes;
