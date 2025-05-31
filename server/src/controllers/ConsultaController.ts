@@ -48,9 +48,9 @@ class ConsultaController implements Crud{
 
     getById = async (request: Request, response: Response) => {
         const {id} = request.params;
-        const { httpStatus } = await this.citi.findById (id);
+        const { httpStatus, value } = await this.citi.findById (id);
 
-        return response.status(httpStatus).send({id})
+        return response.status(httpStatus).send(value)
     }
 };
 

@@ -42,5 +42,5 @@ model Consulta{
   descricaoProblema String
 
   paciente Pet? @relation(fields: [pacienteID], references: [petID])
-  pacienteID Int
+  pacienteID Int?
 }
