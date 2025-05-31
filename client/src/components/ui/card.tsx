@@ -66,9 +66,9 @@ function Card({
   const especieImg = getEspecieImage(especie);
 
   return (
-    <div className="flex justify-center bg-gray-100 font-sf py-8">
+    <div className="flex justify-center font-sf py-8">
       <div
-        className="relative flex items-center rounded-xl p-6 w-[435px] h-auto shadow-md"
+        className="relative flex items-center rounded-xl p-6 w-[435px] h-auto"
         style={{ backgroundColor: bgColor }}
       >
         {/* Caixa de data e horário à esquerda */}
@@ -103,6 +103,5 @@ function Card({
   );
 }
 
-
-
+export type { CardProps };
 export default Card;
