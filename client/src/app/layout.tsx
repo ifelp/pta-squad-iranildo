@@ -4,8 +4,11 @@ import "styles/globals.css";
 import { PageTransitionWrapper } from "@/components/pageTransition";
 
 export const metadata: Metadata = {
-  title: "Next.js Boilerplate",
-  description: "A simple boilerplate for next.js",
+  title: "Brillion",
+  icons: {
+    icon: './img/gato.png'
+  },
+  description: "Sua clínica na ponta das patas.",
   manifest: "/manifest.json",
 };
 
