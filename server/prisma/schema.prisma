@@ -41,6 +41,6 @@ model Consulta{
   hora String
   descricaoProblema String
 
-  paciente Pet @relation(fields: [pacienteID], references: [petID])
+  paciente Pet? @relation(fields: [pacienteID], references: [petID])
   pacienteID Int
 }
