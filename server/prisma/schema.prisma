@@ -24,7 +24,7 @@ model Test {
 }
 
 model Pet{
-  petID Int @id @default(autoincrement())
+  id Int @id @default(autoincrement())
   nome String
   nomeTutor String
   especie String
@@ -41,6 +41,6 @@ model Consulta{
   hora String
   descricaoProblema String
 
-  paciente Pet? @relation(fields: [pacienteID], references: [petID])
+  paciente Pet? @relation(fields: [pacienteID], references: [id])
   pacienteID Int?
 }
