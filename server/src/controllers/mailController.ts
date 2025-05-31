@@ -1,7 +1,7 @@
-import { mailHandler } from './mailHandler';
+import  mailHandler  from '../services/mailHandler';
 import {Request, Response } from 'express';
 
-export async function sendEmail(req: Request, res: Response) {
+export default async function sendEmail(req: Request, res: Response) {
     try { 
             const { userName, userEmail, subjectText } = req.body;
 
@@ -9,7 +9,8 @@ export async function sendEmail(req: Request, res: Response) {
                 userName,
                 userEmail,
                 subjectText,
-                html: `<h1>Hello ${userName}</h1>`
+                html: `<h1>Hello ${userName}</h1>` 
+            }
 
                 const mailResponse = await mailHandler(emailConfig);
 
@@ -18,8 +19,8 @@ export async function sendEmail(req: Request, res: Response) {
                 } else {
                     return res.status(500).json({ message: 'Failed to send email' });
                 }
-            }
+                
     } catch (error) {
-        res.status(500).json({ message: 'An error occurred while sending the email', error: error.message });
+        res.status(500).json({ message: 'An error occurred while sending the email', error });
     }
 }

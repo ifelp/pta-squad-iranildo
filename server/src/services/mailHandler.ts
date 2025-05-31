@@ -1,4 +1,4 @@
-import nodemailer from nodemailer;
+import nodemailer from 'nodemailer';
 import dontenv from 'dotenv';
 
 dontenv.config();
@@ -14,10 +14,10 @@ async function mailHandler(emailConfig: {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
+                user: process.env.EMAIL,
+                pass: process.env.PASSWORD
             },
-        }};
+        });
         
       await transporter.sendMail({
         from: process.env.EMAIL_USER,
@@ -27,8 +27,10 @@ async function mailHandler(emailConfig: {
       })
 
       return true;
+
     } catch(error) {
         console.log(error);
+        return false;
     }
-
-export default mailHandlerailHandler;
+}
+export default mailHandler;
