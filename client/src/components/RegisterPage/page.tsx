@@ -12,23 +12,25 @@ import seta from "../../assets/arrow.png";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import SendEmail from "@/components/modal_email";
+import api from "@/services/api";
 
 interface MatchFormData{
     nome: string
     nomeTutor: string
     idade: number
-    animal_type: string
+    especie: string
     tipoConsulta: string
     medicoResponsavel: string
-    dataAtendimento: string
-    horarioAtendimento: string
-    descricao?: string
+    data: string
+    hora: string
+    descricaoProblema?: string
 }
 
 
 export default function RegisterForm() {
-    const { register, handleSubmit, formState: {errors}, setValue} = useForm<MatchFormData>();
+    const { register, handleSubmit, formState: {errors}, setValue, getValues} = useForm<MatchFormData>();
     const [selectedAnimal, setSelectedAnimal] = useState<string | null>(null);
+    // const [pacienteID, setPacienteID] = useState()
     const router = useRouter()
     const searchParams = useSearchParams()
     const modal = searchParams.get('modal')
@@ -39,7 +41,6 @@ export default function RegisterForm() {
     const close = ()=>{
         router.back()
     }
-
 
     const animalOptions = [
         {name: "Ovelha", src: ovelha},
@@ -59,12 +60,35 @@ export default function RegisterForm() {
 
     const handleAnimalSelect = (animalType: string) => {
     setSelectedAnimal(animalType);
-    setValue('animal_type', animalType);
+    setValue('especie', animalType);
 };
 
-    const submitForm: SubmitHandler<MatchFormData> = (data)=> {
+    const submitForm: SubmitHandler<MatchFormData> = async(mdata)=> {
+
+        const nomeT = getValues('nomeTutor');
+        const {nome,nomeTutor,idade,especie } = mdata
+        const {tipoConsulta, medicoResponsavel, data,hora,descricaoProblema} = mdata
+
+        const response = await api.post('/pet', {
+            nome,
+            nomeTutor,
+            especie,
+            idade
+        });
+
+        console.log(response.data.id)
+
+        const pacienteID = response.data.id
+
+        await api.post('/consulta', {
+            tipoConsulta,
+            medicoResponsavel,
+            data,
+            hora,
+            descricaoProblema,
+            pacienteID
+        })
         console.log('Informação enviada')
-        console.log(data)
     }
     const inputStyle: React.CSSProperties = {
         border: "1px solid #101010",
@@ -183,10 +207,10 @@ export default function RegisterForm() {
                 <div style={inputPosition}>
                     <label htmlFor="serviceDate" style={{fontWeight: "bold"}}>Data do Atendimento: </label>
                     <input type="date" id="serviceDate" style={inputStyle} 
-                    {...register('dataAtendimento', {required: 'Data de atendimento é obrigatória.'})}/>
+                    {...register('data', {required: 'Data de atendimento é obrigatória.'})}/>
                     {
-                    errors.dataAtendimento && (
-                        <p className="text-red-600 text-sm">{errors.dataAtendimento.message}</p>
+                    errors.data && (
+                        <p className="text-red-600 text-sm">{errors.data.message}</p>
                     )
                 }
                 </div>
@@ -194,10 +218,10 @@ export default function RegisterForm() {
                 <div style={inputPosition}>
                     <label htmlFor="serviceHour" style={{fontWeight: "bold"}}>Horário do Atendimento: </label>
                     <input type="time" id="serviceHour" style={inputStyle} 
-                    {...register('horarioAtendimento', {required: 'Hora do atendimento é obrigatória.'})}/>
+                    {...register('hora', {required: 'Hora do atendimento é obrigatória.'})}/>
                     {
-                    errors.horarioAtendimento && (
-                        <p className="text-red-600 text-sm">{errors.horarioAtendimento.message}</p>
+                    errors.hora && (
+                        <p className="text-red-600 text-sm">{errors.hora.message}</p>
                     )
                 }
                 </div>
@@ -211,7 +235,7 @@ export default function RegisterForm() {
                     placeholder="Descreva o problema aqui..."
                     rows={4}
                     style={{...inputStyle, height: "unset"}}
-                    {...register('descricao')}
+                    {...register('descricaoProblema')}
                 ></textarea>
             </div>
 
@@ -221,7 +245,7 @@ export default function RegisterForm() {
 
             {(modal === 'preview') && 
                 (<div className="flex justify-center items-center fixed inset-0 bg-gray-500 bg-opacity-30 backdrop-blur-sm">
-                    <SendEmail onClose={close}/>
+                    <SendEmail name={getValues('nomeTutor')} onClose={close}/>
                 </div>)
             }
 
