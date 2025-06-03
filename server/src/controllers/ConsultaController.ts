@@ -5,21 +5,20 @@ import { get, request } from "http";
 class ConsultaController implements Crud{
     constructor (private readonly  citi = new Citi ("Consulta")){}
     create = async (request: Request, response: Response) => {
-        const { tipoConsulta, medicoResponsel, data, hora, descricaoProblema }= request.body;
+        const { tipoConsulta, medicoResponsavel, data, hora, descricaoProblema, pacienteID }= request.body;
 
         const isAnyUndefined = this.citi.areValuesUndefined(
             tipoConsulta,
-            medicoResponsel,
+            medicoResponsavel,
             data,
             hora,
-            descricaoProblema
         );
         if (isAnyUndefined) return response.status(400).send();
 
-        const newConsulta = { tipoConsulta, medicoResponsel, data, hora, descricaoProblema };
-        const { httpStatus, message } = await this.citi.insertIntoDatabase(newConsulta);
+        const newConsulta = { tipoConsulta, medicoResponsavel, data, hora, descricaoProblema, pacienteID };
+        const { httpStatus, message, value } = await this.citi.insertIntoDatabase(newConsulta);
 
-        return response.status(httpStatus).send({message});
+        return response.status(httpStatus).send([{message, value}]);
     };
 
     get = async (request: Request, response: Response) => {
@@ -37,9 +36,9 @@ class ConsultaController implements Crud{
 
     update = async (request: Request, response: Response) => {
         const {id} = request.params;
-        const { tipoConsulta, medicoResponsel, data, hora, descricaoProblema } = request.body;
+        const { tipoConsulta, medicoResponsavel, data, hora, descricaoProblema } = request.body;
 
-        const updatedValues = { tipoConsulta, medicoResponsel, data, hora, descricaoProblema };
+        const updatedValues = { tipoConsulta, medicoResponsavel, data, hora, descricaoProblema };
 
         const { httpStatus, messageFromUpdate } = await this.citi.updateValue(id, updatedValues);
 
@@ -48,7 +47,7 @@ class ConsultaController implements Crud{
 
     getById = async (request: Request, response: Response) => {
         const {id} = request.params;
-        const { httpStatus, value } = await this.citi.findById (id);
+        const { httpStatus, value } = await this.citi.findById(id);
 
         return response.status(httpStatus).send(value)
     }

@@ -4,6 +4,7 @@ import { Citi, Crud } from "../global";
 class PetController implements Crud {
   constructor(private readonly citi = new Citi("Pet")) {}
   create = async (request: Request, response: Response) => {
+
     const { nome, nomeTutor, especie, idade } = request.body;
 
     const isAnyUndefined = this.citi.areValuesUndefined(
@@ -15,9 +16,9 @@ class PetController implements Crud {
     if (isAnyUndefined) return response.status(400).send();
 
     const newPet = { nome, nomeTutor, especie, idade };
-    const { httpStatus, message } = await this.citi.insertIntoDatabase(newPet);
+    const { httpStatus, value } = await this.citi.insertIntoDatabase(newPet);
 
-    return response.status(httpStatus).send({ message });
+    return response.status(httpStatus).send(value);
   };
 
   get = async (request: Request, response: Response) => {
