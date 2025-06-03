@@ -6,6 +6,41 @@ import { CardProps } from "@/components/ui/card";
 import Filters from "@/components/Filters/filters";
 import Link from "next/link";
 
+/* Ideia de código:
+
+  importe api de services/api
+  importe useEffect junto com o useState lá em cima
+
+  faça uma interface com os dados que vão ser mostrados no card (inclua o id):
+
+  interface CardData{
+    dado: tipo
+    ...
+  }
+
+  dentro da página:
+
+  faça um useState pra gerenciar o estado da variável que irá receber os dados do backend (ela precisa ser do tipo CardData[] (Um array do tipo CardData))
+
+  useEffect(()=>{
+    async function getData(){
+      const response = await api.get('/rota-do-backend')
+
+      setCards(response.data)
+      console.log('Chegou!')
+    }
+  })
+
+  na parte onde os cards estão sendo renderizados, tem um atendimentosFiltrados.map, apenas substitua atendimentosFiltrados pela variável que está recebendo as consultas no backend
+
+  após isso, substitua os nomes das variáveis dentro do map pelas as que você definiu na interface
+
+  CardData.map((card, i)=> {
+    <algumacoisa key={i} nome={card.nome} ...>
+  })
+
+*/ 
+
 
 const AtendimentoPage = () => {
   const [tab, setTab] = useState<'historico' | 'agendamento'>('historico');
