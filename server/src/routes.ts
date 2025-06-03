@@ -1,4 +1,4 @@
-import express from "express";
+import express, { json } from "express";
 import userController from "./controllers/UserController";
 import PetController from "./controllers/PetController";
 import sendEmail from './controllers/mailController'
@@ -6,6 +6,9 @@ import ConsultaController from "./controllers/ConsultaController";
 
 const routes = express.Router();
 
+routes.get('/',(req,res)=> res.json({
+    message: 'Feito com amor e carinho pelo Squad Iranildo! <3'
+}))
 routes.post("/user", userController.create);
 routes.get("/user", userController.get);
 routes.delete("/user/:id", userController.delete);
