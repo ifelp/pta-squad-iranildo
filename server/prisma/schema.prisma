@@ -39,7 +39,7 @@ model Consulta{
   medicoResponsavel String
   data String
   hora String
-  descricaoProblema String
+  descricaoProblema String?
 
   paciente Pet? @relation(fields: [pacienteID], references: [id])
   pacienteID String?
