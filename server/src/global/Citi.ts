@@ -62,9 +62,9 @@ export default class Citi<Entity extends ModelNames> {
    */
   async insertIntoDatabase<T extends ModelCreateInput[Entity]>(
     object: T
-  ): Promise<InsertableDatabase> {
+  ): Promise<InsertableDatabase<Models[Entity]>> {
     try {
-      await prisma[
+      const retorno = await prisma[
         this.entity.toLowerCase() as Uncapitalize<Prisma.ModelName>
         //@ts-expect-error
       ].create({
@@ -74,9 +74,10 @@ export default class Citi<Entity extends ModelNames> {
       return {
         httpStatus: 201,
         message: Message.INSERTED_IN_DATABASE,
+        value: retorno
       };
     } catch (error) {
-      Terminal.show(Message.ERROR_INSERTING_DATABASE);
+      Terminal.show(String(error));
       return {
         httpStatus: 400,
         message: Message.ERROR_INSERTING_DATABASE,
