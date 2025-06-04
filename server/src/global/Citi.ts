@@ -125,7 +125,7 @@ export default class Citi<Entity extends ModelNames> {
         //@ts-expect-error
       ].findFirst({
         where: {
-          id: Number(id),
+          id:id,
         },
       });
       Terminal.show(Message.VALUE_WAS_FOUND);
