@@ -1,27 +1,36 @@
 "use client";
 
 import React from "react";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import Image from "next/image";
 import logoCiti from "../../assets/logoCiti.png";
 import Arrow from "../../assets/arrow.svg";
+import api from "@/services/api";
 
 interface ModalConsultaProps {
   onClose: () => void;
+  pacienteID: string;
 }
 
 interface FormData {
   tipoConsulta: string;
-  medico: string;
+  medicoResponsavel: string;
   data: string;
   hora: string;
+  descricaoProblema: string;
 }
 
-export default function ModalConsulta({ onClose }: ModalConsultaProps) {
+export default function ModalConsulta({ onClose, pacienteID }: ModalConsultaProps) {
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    console.log("Dados enviados:", data);
+  const onSubmit:SubmitHandler<Omit<FormData, "pacienteID">> = async (mdata) => {
+
+    try{
+      const response = await api.post("/consulta", {...mdata, pacienteID});
+    console.log("Dados enviados:", mdata, pacienteID);
+    } catch (error){
+      console.error("Erro ao enviar dados");
+    }
   };
 
   return (
@@ -53,14 +62,14 @@ export default function ModalConsulta({ onClose }: ModalConsultaProps) {
 
             <div style={{ flex: "1 1 100%", maxWidth: "calc(50% - 8px)", display: "flex", flexDirection: "column", minWidth: "250px" }}>
               <label style={{ marginBottom: "6px", fontWeight: 600 }}>Médico Responsável</label>
-              <input {...register("medico", { required: true })} placeholder="Digite aqui..." style={{ padding: "12px", borderRadius: "8px", border: "1px solid #333" }} />
+              <input {...register("medicoResponsavel", { required: true })} placeholder="Digite aqui..." style={{ padding: "12px", borderRadius: "8px", border: "1px solid #333" }} />
             </div>
           </div>
 
           <div style={{ display: "flex", flexWrap: "wrap", gap: "16px", justifyContent: "space-between", flexDirection: "row" }}>
             <div style={{ flex: "1 1 100%", maxWidth: "calc(50% - 8px)", display: "flex", flexDirection: "column", position: "relative", minWidth: "250px" }}>
               <label style={{ marginBottom: "6px", fontWeight: 600 }}>Data do atendimento</label>
-              <input {...register("data", { required: true, pattern: { value: /^(0[1-9]|[12]\d|3[01])\/(0[1-9]|1[0-2])\/\d{2}$/, message: "Formato inválido (dd/mm/aa)"}})} type="date" placeholder="dd/mm/aa" style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #333" }} />
+              <input {...register("data", { required: true})} type="date" placeholder="dd/mm/aa" style={{ width: "100%", padding: "12px", borderRadius: "8px", border: "1px solid #333" }} />
             </div>
 
             <div style={{ flex: "1 1 100%", maxWidth: "calc(50% - 8px)", display: "flex", flexDirection: "column", position: "relative", minWidth: "250px" }}>
