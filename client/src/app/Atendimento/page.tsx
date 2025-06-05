@@ -1,7 +1,7 @@
 "use client";
 
 import api from "@/services/api";
-import { Consulta, getConsultas } from "@/services/Consulta"
+import { getConsultas } from "@/services/Consulta"
 import React, { useState, useEffect } from "react";
 import Card from "@/components/ui/card";
 import { CardProps } from "@/components/ui/card";
@@ -63,7 +63,7 @@ const AtendimentoPage = () => {
   const [search, setSearch] = useState('');
   const [dateStart, setDateStart] = useState('');
   const [dateEnd, setDateEnd] = useState('');
-  const [Consultas, setConsultas] = useState<CardData[]>([]);
+  const [consultas, setConsultas] = useState<CardData[]>([]);
 
   useEffect(() => {
     const fetchConsultas = async () => {
@@ -113,7 +113,7 @@ const AtendimentoPage = () => {
     },
   ];
 
-  const Consulta = atendimentosMock.filter((item) => {
+  const atendimentosFiltrados = atendimentosMock.filter((item) => {
   const nomeMatches = item.doutor.toLowerCase().includes(search.toLowerCase());
   const dataInicioValida = dateStart ? new Date(item.data) >= new Date(dateStart) : true;
   const dataFimValida = dateEnd ? new Date(item.data) <= new Date(dateEnd) : true;
@@ -171,7 +171,7 @@ const AtendimentoPage = () => {
 
       {/* Grid de Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
-        {Consulta.map((item, index) => (
+        {atendimentosFiltrados.map((item, index) => (
           <Link href='/Consulta'>
           <Card key={index} {...item} />
           </Link>
