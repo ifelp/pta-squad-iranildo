@@ -14,6 +14,7 @@ type TabType = 'historico' | 'agendamento';
 type EventoType = 'primeira-consulta' | 'retorno' | 'check-up' | 'vacinacao';
 
 interface CardProps {
+  id: number;
   tab: TabType;
   tipoEvento?: EventoType;
   data: string;
