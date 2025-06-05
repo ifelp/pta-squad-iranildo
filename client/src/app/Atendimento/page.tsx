@@ -1,26 +1,42 @@
 "use client";
 
-import React, { useState } from "react";
+import api from "@/services/api";
+import { Consulta, getConsultas } from "@/services/Consulta"
+import React, { useState, useEffect } from "react";
 import Card from "@/components/ui/card";
 import { CardProps } from "@/components/ui/card";
 import Filters from "@/components/Filters/filters";
 import Link from "next/link";
+import { number } from "framer-motion";
+import { set } from "react-hook-form";
+
+interface CardData {
+  id: string,
+  tipoEvento: string,
+  paciente: string,
+  responsavel: string,
+  doutor: string,
+  especie: string,
+  evento: string,
+  data: string,
+  horario: string,
+}
 
 /* Ideia de código:
 
-  importe api de services/api
-  importe useEffect junto com o useState lá em cima
+  importe api de services/api ✔️
+  importe useEffect junto com o useState lá em cima ✔️
 
-  faça uma interface com os dados que vão ser mostrados no card (inclua o id):
+  faça uma interface com os dados que vão ser mostrados no card (inclua o id): ✔️
 
-  interface CardData{
+  interface CardData{✔️
     dado: tipo
     ...
   }
 
   dentro da página:
 
-  faça um useState pra gerenciar o estado da variável que irá receber os dados do backend (ela precisa ser do tipo CardData[] (Um array do tipo CardData))
+  faça um useState pra gerenciar o estado da variável que irá receber os dados do backend (ela precisa ser do tipo CardData[] (Um array do tipo CardData))✔️
 
   useEffect(()=>{
     async function getData(){
@@ -47,6 +63,18 @@ const AtendimentoPage = () => {
   const [search, setSearch] = useState('');
   const [dateStart, setDateStart] = useState('');
   const [dateEnd, setDateEnd] = useState('');
+  const [Consultas, setConsultas] = useState<CardData[]>([]);
+
+  useEffect(() => {
+    const fetchConsultas = async () => {
+      try {
+        const data = await getConsultas();
+        setConsultas(data);
+      } catch (error) {
+        setConsultas([]);
+      }
+    }
+  })
 
 
   const atendimentosMock: CardProps[] = [
@@ -85,7 +113,7 @@ const AtendimentoPage = () => {
     },
   ];
 
-  const atendimentosFiltrados = atendimentosMock.filter((item) => {
+  const Consulta = atendimentosMock.filter((item) => {
   const nomeMatches = item.doutor.toLowerCase().includes(search.toLowerCase());
   const dataInicioValida = dateStart ? new Date(item.data) >= new Date(dateStart) : true;
   const dataFimValida = dateEnd ? new Date(item.data) <= new Date(dateEnd) : true;
@@ -143,7 +171,7 @@ const AtendimentoPage = () => {
 
       {/* Grid de Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
-        {atendimentosFiltrados.map((item, index) => (
+        {Consulta.map((item, index) => (
           <Link href='/Consulta'>
           <Card key={index} {...item} />
           </Link>
