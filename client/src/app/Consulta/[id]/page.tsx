@@ -16,6 +16,13 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import ModalConsulta from "@/components/Modal Consulta";
 import api from "@/services/api";
 
+type Consulta = {
+  data: string;
+  hora: string;
+  tipoConsulta: string;
+  medicoResponsavel: string;
+};
+
 export default function DetalhesConsulta() {
   const [tipoConsulta, setTipoConsulta] = useState("Vacinação");
   const [medicoResponsavel, setMedicoResponsavel] = useState("Dr. José Carlos");
@@ -25,6 +32,8 @@ export default function DetalhesConsulta() {
   const [especie, setEspecie] = useState("Gato");
   const [idade, setIdade] = useState("5 anos");
   const [pacienteID, setPacienteID] = useState("");
+  const [consultas, setConsultas] = useState<Consulta[]>([]);
+  
 
   const especieToImage: Record<string, any> = {
     Gato: Gato,
@@ -79,8 +88,17 @@ export default function DetalhesConsulta() {
 
           console.log(responsePet.data);
 
-        } catch(error){
+          try{
+            const consultasPet = await api.get(`/consultas/pet/${pacienteID}`)
+            setConsultas(consultasPet.data);
 
+            console.log(consultasPet.data)
+          } catch (error){
+            console.error("Erro ao buscar as consultas do pet", error)
+          }
+
+        } catch(error){
+          console.error("Erro ao buscar os dados do pet", error)
         }
       } catch (error){
         console.error("Erro ao buscar os detalhes da consulta", error)
@@ -138,17 +156,18 @@ export default function DetalhesConsulta() {
       <div style={{ flex: "1 400px", maxWidth: "600px", marginTop: "80px", marginRight: "200px" }}>
         <h3 style={{ fontWeight: 600, fontSize: "30px" }}>Histórico de Consultas</h3>
         <div style={{ background: "#ffffff", border: "1px dashed #d9d9d9", borderRadius: "16px", padding: "16px", marginTop: "30px", display: "flex", flexDirection: "column", gap: "30px" }}>
-          {[1, 2, 3, 4].map((_, i) => (
-            <div key={i} style={{ backgroundColor: "#f0f0f0", padding: "12px", borderRadius: "12px", display: "flex", justifyContent: "space-between", alignItems: "center", boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.05)" }}>
+          {consultas.map((consulta, index) => (
+            <div key={index} style={{ backgroundColor: "#f0f0f0", padding: "12px", borderRadius: "12px", display: "flex", justifyContent: "space-between", alignItems: "center", boxShadow: "0px 1px 3px rgba(0, 0, 0, 0.05)" }}>
               <div style={{ lineHeight: 1.3, backgroundColor: "#ffffff", padding: "8px 8px", borderRadius: "17%" }}>
-                <p style={{ fontWeight: 600, margin: 0 }}>18/02</p>
-                <p style={{ fontWeight: 600, margin: 0 }}>13:00</p>
+                <p style={{ fontWeight: 600, margin: 0 }}>{consulta.data}</p>
+                <p style={{ fontWeight: 600, margin: 0 }}>{consulta.hora}</p>
               </div>
-              <p style={{ fontWeight: 600, margin: 0 }}>Primeira Consulta</p>
-              <p style={{ margin: 0 }}>{medicoResponsavel}</p>
+              <p style={{ fontWeight: 600, margin: 0 }}>{consulta.tipoConsulta}</p>
+              <p style={{ margin: 0 }}>{consulta.medicoResponsavel}</p>
               <Image src={ArrowBack} alt="Arrow" width={20} height={16} style={{ transform: "rotate(180deg)" }} />
             </div>
-          ))}
+          ))
+        }
         </div>
       </div>
       <style jsx>{`
