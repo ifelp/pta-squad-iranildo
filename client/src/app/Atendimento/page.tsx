@@ -51,6 +51,7 @@ const AtendimentoPage = () => {
 
   const atendimentosMock: CardProps[] = [
     {
+      id: 1,
       tab,
       tipoEvento: 'primeira-consulta',
       paciente: 'Luna',
@@ -62,6 +63,7 @@ const AtendimentoPage = () => {
       horario: '13:00',
     },
     {
+      id: 2,
       tab,
       tipoEvento: 'vacinacao',
       paciente: 'Luna',
@@ -73,6 +75,7 @@ const AtendimentoPage = () => {
       horario: '13:00',
     },
     {
+      id: 3,
       tab,
       tipoEvento: 'retorno',
       paciente: 'Luna',
@@ -144,7 +147,7 @@ const AtendimentoPage = () => {
       {/* Grid de Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
         {atendimentosFiltrados.map((item, index) => (
-          <Link href='/Consulta'>
+          <Link href={`/Consulta/${item.id}`}>
           <Card key={index} {...item} />
           </Link>
         ))}
