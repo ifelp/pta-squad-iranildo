@@ -44,6 +44,11 @@ export default function DetalhesConsulta() {
     Porco: Porco,
   };
 
+  const consultaOrdinal = (index: number) => {
+    const ordinais = ["Primeira consulta", "Segunda consulta", "Terceira consulta", "Quarta consulta"];
+    return ordinais[index];
+  };
+
   
 
   
@@ -162,7 +167,7 @@ export default function DetalhesConsulta() {
                 <p style={{ fontWeight: 600, margin: 0 }}>{consulta.data}</p>
                 <p style={{ fontWeight: 600, margin: 0 }}>{consulta.hora}</p>
               </div>
-              <p style={{ fontWeight: 600, margin: 0 }}>{consulta.tipoConsulta}</p>
+              <p style={{ fontWeight: 600, margin: 0 }}>{consultaOrdinal(index)}</p>
               <p style={{ margin: 0 }}>{consulta.medicoResponsavel}</p>
               <Image src={ArrowBack} alt="Arrow" width={20} height={16} style={{ transform: "rotate(180deg)" }} />
             </div>
