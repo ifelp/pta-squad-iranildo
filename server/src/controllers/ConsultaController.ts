@@ -22,7 +22,7 @@ class ConsultaController implements Crud{
     };
 
     get = async (request: Request, response: Response) => {
-        const {httpStatus, values} = await this.citi.getAll();
+        const {httpStatus, values} = await this.citi.getConsultas();
 
         return response.status(httpStatus).send(values);
     }

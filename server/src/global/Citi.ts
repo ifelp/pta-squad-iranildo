@@ -7,7 +7,7 @@ import {
   UpdatableDatabaseValue,
   FindableDatabaseValue,
 } from "./types";
-import { PrismaClient, type Prisma } from "@prisma/client";
+import { Consulta, PrismaClient, type Prisma } from "@prisma/client";
 import prisma from "@database";
 
 type ModelNames = Prisma.ModelName;
@@ -198,7 +198,7 @@ export default class Citi<Entity extends ModelNames> {
         //@ts-expect-error
       ].delete({
         where: {
-          id: Number(id),
+          id: id,
         },
       });
       Terminal.show(Message.VALUE_DELETED_FROM_DATABASE);
@@ -207,7 +207,7 @@ export default class Citi<Entity extends ModelNames> {
         messageFromDelete: Message.VALUE_DELETED_FROM_DATABASE,
       };
     } catch (error) {
-      Terminal.show(Message.ERROR_AT_DELETE_FROM_DATABASE);
+      Terminal.show(String(error));
       return {
         httpStatus: 400,
         messageFromDelete: Message.ERROR_AT_DELETE_FROM_DATABASE,
@@ -245,6 +245,28 @@ export default class Citi<Entity extends ModelNames> {
         httpStatus: 400,
         values: [],
       };
+    }
+  }
+
+
+  async getConsultas(): Promise<GetableDatabase<Consulta>> {
+    try{
+      const values = await prisma.consulta.findMany({
+        include: {
+          paciente: true
+        }
+      })
+
+      return {
+        httpStatus: 200,
+        values: values
+      }
+    } catch(error: any){
+      Terminal.show(error)
+      return {
+        httpStatus: 400,
+        values: []
+      }
     }
   }
 

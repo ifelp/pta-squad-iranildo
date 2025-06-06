@@ -1,6 +1,7 @@
-import { View, Text, Dimensions } from 'react-native';
+import { View, Text, Dimensions, useState, useEffect } from 'react-native';
 import CatIcon from '../../assets/cat.svg';
 import AlarmIcon from '../../assets/alarm.svg'
+import { getConsultas } from '@/services/Consulta'
 
 interface CardProps  {
   date: string;
@@ -14,6 +15,19 @@ interface CardProps  {
 
 export default function Card({ date, time, dono, medico, pet, tag, backgroundColor }: CardProps) {
     const { width, height } = Dimensions.get('window');
+
+    const [cards, setCards] = useState<CardData[]>([]);
+
+    useEffect(() => {
+    const fetchConsultas = async () => {
+      try {
+        const data = await getConsultas();
+        setConsultas(data);
+      } catch (error) {
+        setConsultas([]);
+      }
+    }
+  })
 
   return (
     <View style={{ flexDirection: 'row', backgroundColor: backgroundColor, padding: width * 0.02, borderRadius: 20, alignItems: 'center', justifyContent: 'space-between', marginHorizontal: width * 0.05, marginBottom: height * 0.02 }}>
