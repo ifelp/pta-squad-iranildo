@@ -24,5 +24,6 @@ routes.get("/consulta", ConsultaController.get);
 routes.delete("/consulta/:id", ConsultaController.delete);
 routes.patch("/consulta/:id", ConsultaController.update);
 routes.get("/consulta/:id", ConsultaController.getById);
+routes.get("/consultas/pet/:id", ConsultaController.getConsultsByPet);
 
 export default routes;

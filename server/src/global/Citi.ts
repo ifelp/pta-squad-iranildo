@@ -215,6 +215,40 @@ export default class Citi<Entity extends ModelNames> {
     }
   }
 
+  async getConsultsByPet(id: string): Promise<GetableDatabase<Models[Entity]>> {
+    try {
+      const consults = await prisma[
+        this.entity.toLowerCase() as Uncapitalize<Prisma.ModelName>
+        //@ts-expect-error
+      ].findMany({
+        where: {
+          pacienteID: id, 
+        },
+      });
+  
+      if (consults.length === 0) {
+        Terminal.show(Message.VALUE_WAS_NOT_FOUND);
+        return {
+          httpStatus: 404,
+          values: [],
+        };
+      }
+  
+      Terminal.show(Message.GET_ALL_VALUES_FROM_DATABASE);
+      return {
+        httpStatus: 200,
+        values: consults, 
+      };
+    } catch (error) {
+      Terminal.show(Message.ERROR_GETTING_VALUES_FROM_DATABASE);
+      return {
+        httpStatus: 400,
+        values: [],
+      };
+    }
+  }
+
+
   async getConsultas(): Promise<GetableDatabase<Consulta>> {
     try{
       const values = await prisma.consulta.findMany({
@@ -235,4 +269,5 @@ export default class Citi<Entity extends ModelNames> {
       }
     }
   }
+
 }
