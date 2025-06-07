@@ -42,7 +42,7 @@ function getBackgroundColor(tab: TabType, tipoEvento?: string): string {
 }
 
 function noYear(date: string){
-  const [dia, mes, ano] = date.split('/')
+  const [ano, mes, dia] = date.split('-')
 
   return (dia + '/' + mes)
 }
