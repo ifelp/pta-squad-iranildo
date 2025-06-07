@@ -6,6 +6,7 @@ import Image from "next/image";
 import logoCiti from "../../assets/logoCiti.png";
 import Arrow from "../../assets/arrow.svg";
 import api from "@/services/api";
+import { useRouter } from "next/navigation";
 
 interface ModalConsultaProps {
   onClose: () => void;
@@ -22,12 +23,15 @@ interface FormData {
 
 export default function ModalConsulta({ onClose, pacienteID }: ModalConsultaProps) {
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
+  const router = useRouter()
 
   const onSubmit:SubmitHandler<Omit<FormData, "pacienteID">> = async (mdata) => {
 
     try{
       const response = await api.post("/consulta", {...mdata, pacienteID});
-    console.log("Dados enviados:", mdata, pacienteID);
+      console.log("Dados enviados:", mdata, pacienteID);
+      router.back()
+      
     } catch (error){
       console.error("Erro ao enviar dados");
     }
@@ -52,10 +56,10 @@ export default function ModalConsulta({ onClose, pacienteID }: ModalConsultaProp
             <div style={{ flex: "1 1 100%", maxWidth: "calc(50% - 8px)", display: "flex", flexDirection: "column", minWidth: "250px", position: "relative" }}>
               <label style={{ marginBottom: "6px", fontWeight: 600 }}>Tipo de consulta</label>
               <select {...register("tipoConsulta", { required: true })} style={{ padding: "12px", paddingRight: "64px", borderRadius: "8px", border: "1px solid #333", appearance: "none" }}>
-                <option value="">Selecione aqui</option>
-                <option value="retorno">Retorno</option>
-                <option value="vacina">Vacina</option>
-                <option value="exame">Exame</option>
+                <option value="Primeira consulta">Selecione aqui</option>
+                <option value="Retorno">Retorno</option>
+                <option value="Vacinação">Vacina</option>
+                <option value="Check-up">Exame</option>
               </select>
               <Image src={Arrow} alt="Ícone Personalizado" width={24} height={24} style={{ position: "absolute", top: "67%", right: "12px", transform: "translateY(-50%) rotate(180deg)", pointerEvents: "none" }}/>
             </div>
@@ -77,7 +81,6 @@ export default function ModalConsulta({ onClose, pacienteID }: ModalConsultaProp
               <input {...register("hora", { required: true, pattern: { value: /^([0-1]\d|2[0-3]):([0-5]\d)$/, message: "Formato inválido (hh:mm)" }})} type="time" placeholder="00:00" style={{ width: "100%", padding: "12px 12px 12px 12px", borderRadius: "8px", border: "1px solid #333" }} />
             </div>
           </div>
-
           <button type="submit" style={{ marginTop: "20px", padding: "14px", backgroundColor: "#30E07F", color: "white", border: "none", borderRadius: "24px", fontWeight: "bold", fontSize: "16px", cursor: "pointer", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
             Finalizar cadastro
           </button>
