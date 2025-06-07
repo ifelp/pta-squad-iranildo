@@ -1,14 +1,10 @@
 "use client";
 
-import api from "@/services/api";
 import { getConsultas} from "@/services/Consulta"
 import React, { useState, useEffect } from "react";
 import Card from "@/components/ui/card";
-import { CardProps } from "@/components/ui/card";
 import Filters from "@/components/Filters/filters";
 import Link from "next/link";
-import { number } from "framer-motion";
-import { set } from "react-hook-form";
 
 interface ConsultaData {
   id: string,
@@ -62,7 +58,7 @@ interface PetData{
 
 
 const AtendimentoPage = () => {
-  const [tab, setTab] = useState<'historico' | 'agendamento'>('agendamento');
+  const [tab, setTab] = useState<'historico' | 'agendamento'>('historico');
   const [search, setSearch] = useState('');
   const [dateStart, setDateStart] = useState('');
   const [dateEnd, setDateEnd] = useState('');
@@ -80,12 +76,7 @@ const AtendimentoPage = () => {
     }
 
     fetchConsultas()
-  }, [])
-
-  function parseDate(date: string) {
-  const [dia, mes, ano] = date.split('/').map(Number);
-  return new Date(ano, mes - 1, dia);
-}
+  })
 
   return (
     <div className="pt-6 px-32 space-y-4 text-sm gap-8">
@@ -133,11 +124,11 @@ const AtendimentoPage = () => {
         </div>
         </div>
 
-
+      <div className="flex flex-wrap gap-12 w-full">
       {/* Grid de Cards */}
         {tab === 'agendamento' && 
         consultas.filter((value)=> {
-          return parseDate(value.data) < new Date()
+          return new Date(value.data) < new Date()
         }).map((item, index) => (
           <Link href={`/Consulta/${item.id}`}>
           <Card tab={tab} key={index} {...item} />
@@ -146,7 +137,7 @@ const AtendimentoPage = () => {
         {
         tab === 'historico' && 
         consultas.filter((value)=> {
-          return parseDate(value.data) > new Date()
+          return new Date(value.data) > new Date()
         }).map((item, index) => (
           <Link href={`/Consulta/${item.id}`}>
           <Card tab={tab} key={index} {...item} />
