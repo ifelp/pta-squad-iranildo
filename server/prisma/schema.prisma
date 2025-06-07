@@ -24,23 +24,23 @@ model Test {
 }
 
 model Pet{
-  petID Int @id @default(autoincrement())
+  id String @id @default(uuid())
   nome String
   nomeTutor String
   especie String
-  idade Int
+  idade String
 
   consultas Consulta[]
 }
 
 model Consulta{
-  id Int @id @default(autoincrement())
+  id String @id @default(uuid())
   tipoConsulta String
-  medicoResponsel String
+  medicoResponsavel String
   data String
   hora String
-  descricaoProblema String
+  descricaoProblema String?
 
-  paciente Pet @relation(fields: [pacienteID], references: [petID])
-  pacienteID Int
+  paciente Pet? @relation(fields: [pacienteID], references: [id])
+  pacienteID String?
 }

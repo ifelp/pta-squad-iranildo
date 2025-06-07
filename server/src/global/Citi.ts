@@ -7,7 +7,7 @@ import {
   UpdatableDatabaseValue,
   FindableDatabaseValue,
 } from "./types";
-import { PrismaClient, type Prisma } from "@prisma/client";
+import { Consulta, PrismaClient, type Prisma } from "@prisma/client";
 import prisma from "@database";
 
 type ModelNames = Prisma.ModelName;
@@ -62,9 +62,9 @@ export default class Citi<Entity extends ModelNames> {
    */
   async insertIntoDatabase<T extends ModelCreateInput[Entity]>(
     object: T
-  ): Promise<InsertableDatabase> {
+  ): Promise<InsertableDatabase<Models[Entity]>> {
     try {
-      await prisma[
+      const retorno = await prisma[
         this.entity.toLowerCase() as Uncapitalize<Prisma.ModelName>
         //@ts-expect-error
       ].create({
@@ -74,9 +74,10 @@ export default class Citi<Entity extends ModelNames> {
       return {
         httpStatus: 201,
         message: Message.INSERTED_IN_DATABASE,
+        value: retorno
       };
     } catch (error) {
-      Terminal.show(Message.ERROR_INSERTING_DATABASE);
+      Terminal.show(String(error));
       return {
         httpStatus: 400,
         message: Message.ERROR_INSERTING_DATABASE,
@@ -124,7 +125,7 @@ export default class Citi<Entity extends ModelNames> {
         //@ts-expect-error
       ].findFirst({
         where: {
-          id: Number(id),
+          id:id,
         },
       });
       Terminal.show(Message.VALUE_WAS_FOUND);
@@ -197,7 +198,7 @@ export default class Citi<Entity extends ModelNames> {
         //@ts-expect-error
       ].delete({
         where: {
-          id: Number(id),
+          id: id,
         },
       });
       Terminal.show(Message.VALUE_DELETED_FROM_DATABASE);
@@ -206,11 +207,67 @@ export default class Citi<Entity extends ModelNames> {
         messageFromDelete: Message.VALUE_DELETED_FROM_DATABASE,
       };
     } catch (error) {
-      Terminal.show(Message.ERROR_AT_DELETE_FROM_DATABASE);
+      Terminal.show(String(error));
       return {
         httpStatus: 400,
         messageFromDelete: Message.ERROR_AT_DELETE_FROM_DATABASE,
       };
     }
   }
+
+  async getConsultsByPet(id: string): Promise<GetableDatabase<Models[Entity]>> {
+    try {
+      const consults = await prisma[
+        this.entity.toLowerCase() as Uncapitalize<Prisma.ModelName>
+        //@ts-expect-error
+      ].findMany({
+        where: {
+          pacienteID: id, 
+        },
+      });
+  
+      if (consults.length === 0) {
+        Terminal.show(Message.VALUE_WAS_NOT_FOUND);
+        return {
+          httpStatus: 404,
+          values: [],
+        };
+      }
+  
+      Terminal.show(Message.GET_ALL_VALUES_FROM_DATABASE);
+      return {
+        httpStatus: 200,
+        values: consults, 
+      };
+    } catch (error) {
+      Terminal.show(Message.ERROR_GETTING_VALUES_FROM_DATABASE);
+      return {
+        httpStatus: 400,
+        values: [],
+      };
+    }
+  }
+
+
+  async getConsultas(): Promise<GetableDatabase<Consulta>> {
+    try{
+      const values = await prisma.consulta.findMany({
+        include: {
+          paciente: true
+        }
+      })
+
+      return {
+        httpStatus: 200,
+        values: values
+      }
+    } catch(error: any){
+      Terminal.show(error)
+      return {
+        httpStatus: 400,
+        values: []
+      }
+    }
+  }
+
 }

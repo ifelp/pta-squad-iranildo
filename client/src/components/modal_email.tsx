@@ -3,6 +3,7 @@ import React from 'react';
 import logoCiti from "../assets/logoCiti.png";
 import closeIcon from "../assets/close.png";
 import {useForm, SubmitHandler} from 'react-hook-form'
+import api from '@/services/api';
 
 const positionStyle: React.CSSProperties = {
     display: "flex",
@@ -32,17 +33,25 @@ const inputStyle: React.CSSProperties = {
 }
 
 interface ModalEmailProps{
+    name: string,
     onClose: ()=> void
 }
 
 interface Email{
-    email:string
+    userName: string,
+    userEmail:string,
 }
 
-export default function SendEmail({onClose}: ModalEmailProps){
-    const {register, formState: {errors}, handleSubmit} = useForm<Email>()
+export default function SendEmail({name,onClose}: ModalEmailProps){
+    const {register, formState: {errors}, handleSubmit, setValue} = useForm<Email>()
+    setValue('userName', name);
 
-    const sendEMail: SubmitHandler<Email> = (data)=>{
+    const sendEMail: SubmitHandler<Email> = async(data)=>{
+        const {userName, userEmail} = data
+        await api.post('email',{
+            userName,
+            userEmail,
+        })
         console.log('Email enviado.')
         console.log(data)
     }
@@ -71,7 +80,7 @@ return (
         <div style={{display: "flex", flexDirection: "column", gap: "12px"}}>
             <label htmlFor='emailTutor' style={{fontWeight: "bold"}}>Email</label>
             <input type='email' id='emailTutor' placeholder=' Digite aqui...' style={inputStyle} 
-            {...register('email', {required: 'Email do tutor é obrigatorio.'})}/>
+            {...register('userEmail', {required: 'Email do tutor é obrigatorio.'})}/>
         </div>
 
         <div>

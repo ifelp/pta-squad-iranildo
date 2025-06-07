@@ -1,10 +1,60 @@
 "use client";
 
-import React, { useState } from "react";
+import { getConsultas} from "@/services/Consulta"
+import React, { useState, useEffect } from "react";
 import Card from "@/components/ui/card";
-import { CardProps } from "@/components/ui/card";
 import Filters from "@/components/Filters/filters";
 import Link from "next/link";
+
+interface ConsultaData {
+  id: string,
+  tipoConsulta: string,
+  medicoResponsavel: string,
+  data: string,
+  hora: string,
+  paciente: PetData
+}
+
+interface PetData{
+  nome: string,
+  nomeTutor: string,
+  especie: string
+}
+
+/* Ideia de código:
+
+  importe api de services/api ✔️
+  importe useEffect junto com o useState lá em cima ✔️
+
+  faça uma interface com os dados que vão ser mostrados no card (inclua o id): ✔️
+
+  interface CardData{✔️
+    dado: tipo
+    ...
+  }
+
+  dentro da página:
+
+  faça um useState pra gerenciar o estado da variável que irá receber os dados do backend (ela precisa ser do tipo CardData[] (Um array do tipo CardData))✔️
+
+  useEffect(()=>{
+    async function getData(){
+      const response = await api.get('/rota-do-backend')
+
+      setCards(response.data)
+      console.log('Chegou!')
+    }
+  })
+
+  na parte onde os cards estão sendo renderizados, tem um atendimentosFiltrados.map, apenas substitua atendimentosFiltrados pela variável que está recebendo as consultas no backend
+
+  após isso, substitua os nomes das variáveis dentro do map pelas as que você definiu na interface
+
+  CardData.map((card, i)=> {
+    <algumacoisa key={i} nome={card.nome} ...>
+  })
+
+*/ 
 
 
 const AtendimentoPage = () => {
@@ -12,52 +62,21 @@ const AtendimentoPage = () => {
   const [search, setSearch] = useState('');
   const [dateStart, setDateStart] = useState('');
   const [dateEnd, setDateEnd] = useState('');
+  const [consultas, setConsultas] = useState<ConsultaData[]>([]);
 
+  useEffect(() => {
+    const fetchConsultas = async () => {
+      try {
+        const data = await getConsultas();
+        setConsultas(data);
+        console.log(consultas)
+      } catch (error) {
+        setConsultas([]);
+      }
+    }
 
-  const atendimentosMock: CardProps[] = [
-    {
-      tab,
-      tipoEvento: 'primeira-consulta',
-      paciente: 'Luna',
-      responsavel: 'João Alves',
-      doutor: 'Dr. José Carlos',
-      especie: 'gato',
-      evento: 'Primeira Consulta',
-      data: '18/02',
-      horario: '13:00',
-    },
-    {
-      tab,
-      tipoEvento: 'vacinacao',
-      paciente: 'Luna',
-      responsavel: 'João Alves',
-      doutor: 'Dr. José Carlos',
-      especie: 'gato',
-      evento: 'Vacinação',
-      data: '18/02',
-      horario: '13:00',
-    },
-    {
-      tab,
-      tipoEvento: 'retorno',
-      paciente: 'Luna',
-      responsavel: 'João Alves',
-      doutor: 'Dr. José Carlos',
-      especie: 'gato',
-      evento: 'Retorno',
-      data: '25/03',
-      horario: '13:00',
-    },
-  ];
-
-  const atendimentosFiltrados = atendimentosMock.filter((item) => {
-  const nomeMatches = item.doutor.toLowerCase().includes(search.toLowerCase());
-  const dataInicioValida = dateStart ? new Date(item.data) >= new Date(dateStart) : true;
-  const dataFimValida = dateEnd ? new Date(item.data) <= new Date(dateEnd) : true;
-  const tipoTabCorreto = item.tab === tab;
-
-  return nomeMatches && dataInicioValida && dataFimValida && tipoTabCorreto;
-});
+    fetchConsultas()
+  })
 
   return (
     <div className="pt-6 px-32 space-y-4 text-sm gap-8">
@@ -105,14 +124,26 @@ const AtendimentoPage = () => {
         </div>
         </div>
 
-
+      <div className="flex flex-wrap gap-12 w-full">
       {/* Grid de Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
-        {atendimentosFiltrados.map((item, index) => (
-          <Link href='/Consulta'>
-          <Card key={index} {...item} />
+        {tab === 'agendamento' && 
+        consultas.filter((value)=> {
+          return new Date(value.data) < new Date()
+        }).map((item, index) => (
+          <Link href={`/Consulta/${item.id}`}>
+          <Card tab={tab} key={index} {...item} />
           </Link>
-        ))}
+        )) }
+        {
+        tab === 'historico' && 
+        consultas.filter((value)=> {
+          return new Date(value.data) > new Date()
+        }).map((item, index) => (
+          <Link href={`/Consulta/${item.id}`}>
+          <Card tab={tab} key={index} {...item} />
+          </Link>
+        ))
+        }
       </div>
 
       {/* Botão Nova Consulta */}
