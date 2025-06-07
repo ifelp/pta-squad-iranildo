@@ -239,7 +239,7 @@ export default function RegisterForm() {
                 ></textarea>
             </div>
 
-            <button type="submit" onClick={handleClick} style={{ display: "flex", alignSelf: "flex-end", padding: '12px 40px', backgroundColor: '#50E678', color: "#FFFFFF", borderRadius: '24px', cursor: 'pointer', marginTop: '41px', width: "205px", height: "48px"}}>
+            <button type="submit" onClick={handleClick} style={{ display: "flex", alignSelf: "flex-end", alignItems: 'center', padding: '12px 40px', backgroundColor: '#50E678', color: "#FFFFFF", borderRadius: '24px', cursor: 'pointer', marginTop: '41px', width: "250px", height: "49px"}}>
                 Finalizar Cadastro
             </button>
 
