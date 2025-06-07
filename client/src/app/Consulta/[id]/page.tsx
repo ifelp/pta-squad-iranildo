@@ -8,6 +8,7 @@ import Cavalo from "../../../assets/cavalo.svg"
 import Girafa from "../../../assets/girafa.svg"
 import Ovelha from "../../../assets/ovelha.svg"
 import Porco from "../../../assets/porco.svg"
+import Vaca from '../../../assets/vaca.png'
 import Arrow from "../../../assets/arrow.svg";
 import Task from "../../../assets/task_alt.svg";
 import ArrowBack from "../../../assets/arrow_back.svg";
@@ -42,6 +43,7 @@ export default function DetalhesConsulta() {
     Girafa: Girafa,
     Ovelha: Ovelha,
     Porco: Porco,
+    Vaca: Vaca
   };
 
   const consultaOrdinal = (index: number) => {
